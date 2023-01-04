@@ -1,0 +1,29 @@
+name: Benchmark
+on:
+  workflow_dispatch:
+    inputs:
+      threads:
+        description: 'Threads number'
+        required: true
+        default: '2'
+      time:
+        description: 'Time of benchmark in seconds'
+        required: true
+        default: '300'
+      parallel_runs:
+        description: "Number of parallel runs"
+        default: '["job-0", "job-1", "job-2", "job-3", "job-4"]'
+jobs:
+  benchmark:
+    name: Check performance regeression.
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        job_name: ${{ fromJSON(github.event.inputs.parallel_runs) }}
+    steps:
+      - name: install sysbench
+        run: |
+          sudo apt-get update
+          sudo apt -y install sysbench
+      - name: run benchmark
+        run: sysbench cpu --threads=${{ github.event.inputs.threads }} --time=${{ github.event.inputs.time }} run

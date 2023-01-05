@@ -16,7 +16,7 @@ on:
 jobs:
   benchmark:
     name: Check performance regeression.
-    runs-on: self-hosted
+    runs-on: [self-hosted, custom-test-runner]
     strategy:
       matrix:
         job_name: ${{ fromJSON(github.event.inputs.parallel_runs) }}
